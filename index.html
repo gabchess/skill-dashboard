@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill Dashboard</title>
+  <meta name="description" content="Find any AI skill and its trigger phrase in under 5 seconds">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>&#x26A1;</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header__brand">
+        <span class="header__icon">&#x26A1;</span>
+        <div>
+          <h1 class="header__title">Skill Dashboard</h1>
+          <span class="header__subtitle">OpenClaw + Claude Code</span>
+        </div>
+      </div>
+      <div class="header__meta">
+        <span class="header__version">v1.0</span>
+        <span id="currentDate"></span>
+      </div>
+    </header>
+
+    <!-- Stats Row -->
+    <div class="stats-row" id="statsRow"></div>
+
+    <!-- Search -->
+    <div class="search-wrapper">
+      <span class="search-wrapper__icon" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+      <label for="searchInput" class="sr-only">Search skills, triggers, categories</label>
+      <input
+        type="text"
+        id="searchInput"
+        class="search-bar"
+        placeholder="Search skills, triggers, or categories..."
+        autocomplete="off"
+      >
+      <kbd class="search-wrapper__kbd">Ctrl+K</kbd>
+    </div>
+
+    <!-- Recently Used -->
+    <section class="recently-used" id="recentlyUsed" aria-label="Recently Used Skills">
+      <h2 class="section-label">Recently Used</h2>
+      <div class="recently-used__scroll" id="recentlyUsedList"></div>
+    </section>
+
+    <!-- Tab Navigation -->
+    <nav class="tab-bar" id="tabBar" role="tablist" aria-label="Dashboard sections">
+      <button class="tab-item tab-item--active" role="tab" aria-selected="true" data-tab="skills">Skills</button>
+      <button class="tab-item" role="tab" aria-selected="false" data-tab="apis">APIs &amp; Tools</button>
+      <button class="tab-item" role="tab" aria-selected="false" data-tab="cheatsheet">Cheat Sheet</button>
+      <button class="tab-item" role="tab" aria-selected="false" data-tab="roadmap">Roadmap</button>
+    </nav>
+
+    <!-- Tab Panels -->
+    <main>
+      <!-- Skills Panel -->
+      <section class="tab-panel tab-panel--active" id="panel-skills" role="tabpanel">
+        <div class="filter-bar" id="filterBar"></div>
+        <div class="skills-grid" id="skillsGrid"></div>
+      </section>
+
+      <!-- APIs Panel -->
+      <section class="tab-panel" id="panel-apis" role="tabpanel">
+        <div class="skills-grid" id="apisGrid"></div>
+      </section>
+
+      <!-- Cheat Sheet Panel -->
+      <section class="tab-panel" id="panel-cheatsheet" role="tabpanel">
+        <table class="cheat-table">
+          <thead>
+            <tr>
+              <th>Say This</th>
+              <th>Activates</th>
+              <th>Category</th>
+            </tr>
+          </thead>
+          <tbody id="cheatBody"></tbody>
+        </table>
+      </section>
+
+      <!-- Roadmap Panel -->
+      <section class="tab-panel" id="panel-roadmap" role="tabpanel">
+        <div class="roadmap-grid" id="roadmapGrid"></div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span>Skill Dashboard &middot; Gabe</span>
+      <span>Built for AI skill orchestration</span>
+    </footer>
+  </div>
+
+  <script src="skills-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
