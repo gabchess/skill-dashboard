@@ -298,6 +298,22 @@ body {
 }
 
 /* ========== FILTER BAR ========== */
+.filter-bar-wrap {
+  position: relative;
+}
+
+.filter-bar-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 40px;
+  background: linear-gradient(to right, transparent, var(--color-page));
+  pointer-events: none;
+  z-index: 1;
+}
+
 .filter-bar {
   display: flex;
   gap: var(--space-xs);
@@ -306,6 +322,7 @@ body {
   scrollbar-width: none;
   -ms-overflow-style: none;
   padding-bottom: 2px;
+  padding-right: 32px;
 }
 
 .filter-bar::-webkit-scrollbar {
@@ -809,5 +826,19 @@ button {
 
   .skill-card__desc {
     -webkit-line-clamp: 1;
+  }
+
+  /* Bigger touch targets on mobile (44px min per design guidelines) */
+  .filter-chip {
+    padding: 8px 14px;
+    font-size: 0.75rem;
+  }
+
+  .copy-btn {
+    padding: 8px 10px;
+  }
+
+  .copy-btn--inline {
+    padding: 6px 8px;
   }
 }
