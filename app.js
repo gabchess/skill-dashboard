@@ -6,7 +6,7 @@
   var MAX_RECENT = 8;
 
   var state = {
-    activeTab: 'skills',
+    activeTab: getTabFromHash() || 'skills',
     activeCategory: 'all',
     searchQuery: '',
     recentlyUsed: loadRecentlyUsed(),
@@ -15,14 +15,15 @@
   // ========== DOM REFS ==========
   var els = {
     searchInput: document.getElementById('searchInput'),
+    recentlyUsed: document.getElementById('recentlyUsed'),
     recentlyUsedList: document.getElementById('recentlyUsedList'),
     skillsGrid: document.getElementById('skillsGrid'),
     apisGrid: document.getElementById('apisGrid'),
     cheatBody: document.getElementById('cheatBody'),
     filterBar: document.getElementById('filterBar'),
     tabBar: document.getElementById('tabBar'),
-    statsRow: document.getElementById('statsRow'),
     currentDate: document.getElementById('currentDate'),
+    skillCount: document.getElementById('skillCount'),
     roadmapGrid: document.getElementById('roadmapGrid'),
   };
 
@@ -32,7 +33,9 @@
       month: 'short', day: 'numeric', year: 'numeric'
     });
 
-    renderStats();
+    // Skill count in header
+    els.skillCount.textContent = window.SKILLS.length;
+
     renderFilterChips();
     renderRecentlyUsed();
     renderSkillsGrid();
@@ -40,12 +43,39 @@
     renderCheatSheet();
     renderRoadmap();
 
+    // Activate tab from hash
+    activateTab(state.activeTab);
+
     // Events
     els.searchInput.addEventListener('input', debounce(handleSearch, 150));
     els.tabBar.addEventListener('click', handleTabClick);
     els.filterBar.addEventListener('click', handleFilterClick);
     document.addEventListener('keydown', handleKeyboardShortcut);
     document.addEventListener('click', handleGlobalClick);
+    window.addEventListener('hashchange', handleHashChange);
+  }
+
+  // ========== HASH ROUTING ==========
+  function getTabFromHash() {
+    var hash = window.location.hash.replace('#', '');
+    var valid = ['skills', 'apis', 'cheatsheet', 'roadmap'];
+    return valid.indexOf(hash) > -1 ? hash : null;
+  }
+
+  function handleHashChange() {
+    var tab = getTabFromHash();
+    if (tab && tab !== state.activeTab) {
+      state.activeTab = tab;
+      activateTab(tab);
+    }
+  }
+
+  function setHash(tab) {
+    if (history.replaceState) {
+      history.replaceState(null, '', '#' + tab);
+    } else {
+      window.location.hash = tab;
+    }
   }
 
   // ========== LOCALSTORAGE ==========
@@ -53,7 +83,6 @@
     try {
       var data = JSON.parse(localStorage.getItem(STORAGE_KEY));
       if (!Array.isArray(data)) return [];
-      // Filter out stale IDs that no longer exist in SKILLS
       return data.filter(function (id) {
         return typeof id === 'string' && findSkill(id) !== null;
       });
@@ -80,33 +109,13 @@
   }
 
   // ========== RENDERING ==========
-  function renderStats() {
-    var skills = window.SKILLS;
-    var active = skills.filter(function (s) { return s.status === 'active'; }).length;
-    var categories = Object.keys(window.CATEGORIES).length - 1; // exclude 'all'
-    var apis = window.APIS.filter(function (a) { return a.authStatus === 'connected'; }).length;
-
-    els.statsRow.innerHTML =
-      createStatCard(skills.length, 'Total Skills') +
-      createStatCard(active, 'Active') +
-      createStatCard(categories, 'Categories') +
-      createStatCard(apis + '/' + window.APIS.length, 'APIs Connected');
-  }
-
-  function createStatCard(value, label) {
-    return '<div class="stat-card">' +
-      '<div class="stat-card__value">' + value + '</div>' +
-      '<div class="stat-card__label">' + escapeHtml(label) + '</div>' +
-      '</div>';
-  }
-
   function renderRecentlyUsed() {
     if (state.recentlyUsed.length === 0) {
-      els.recentlyUsedList.innerHTML =
-        '<span class="recently-used__empty">No skills used yet. Click any skill to get started.</span>';
+      els.recentlyUsed.classList.add('recently-used--hidden');
       return;
     }
 
+    els.recentlyUsed.classList.remove('recently-used--hidden');
     var html = '';
     for (var i = 0; i < state.recentlyUsed.length; i++) {
       var skill = findSkill(state.recentlyUsed[i]);
@@ -157,24 +166,27 @@
   }
 
   function createSkillCard(skill) {
-    var catInfo = window.CATEGORIES[skill.category] || { label: skill.category };
-    return '<article class="card skill-card" data-skill-id="' + escapeHtml(skill.id) + '" tabindex="0">' +
-      '<button class="copy-btn" data-trigger="' + escapeHtml(skill.trigger) + '" title="Copy trigger">' +
-        '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
-        ' copy' +
-      '</button>' +
-      '<div class="skill-card__header">' +
-        '<div>' +
-          '<h3 class="skill-card__name">' + escapeHtml(skill.name) + '</h3>' +
-          '<span class="skill-card__source">' + escapeHtml(skill.source) + '</span>' +
-        '</div>' +
+    var catInfo = window.CATEGORIES[skill.category] || { label: skill.category, color: 'green' };
+    var catColor = catInfo.color || 'green';
+
+    return '<article class="card skill-card" data-skill-id="' + escapeHtml(skill.id) + '" data-cat-color="' + catColor + '" tabindex="0">' +
+      // Row 1: Trigger phrase (hero) + copy button
+      '<div class="skill-card__trigger-row">' +
+        '<code class="trigger-phrase trigger-phrase--hero">' + escapeHtml(skill.trigger) + '</code>' +
+        '<button class="copy-btn" data-trigger="' + escapeHtml(skill.trigger) + '" title="Copy trigger">' +
+          '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
+          ' copy' +
+        '</button>' +
       '</div>' +
+      // Row 2: Name
+      '<h3 class="skill-card__name">' + escapeHtml(skill.name) + '</h3>' +
+      // Row 3: Description
       '<p class="skill-card__desc">' + escapeHtml(skill.description) + '</p>' +
-      '<div class="skill-card__footer">' +
-        '<code class="trigger-phrase">' + escapeHtml(skill.trigger) + '</code>' +
-        getStatusBadgeHtml(skill.status) +
+      // Row 4: Category + source
+      '<div class="skill-card__meta">' +
+        '<span class="skill-card__category">' + escapeHtml(catInfo.label) + '</span>' +
+        '<span class="skill-card__source">' + escapeHtml(skill.source) + '</span>' +
       '</div>' +
-      '<div class="skill-card__category">' + escapeHtml(catInfo.label) + '</div>' +
       '</article>';
   }
 
@@ -321,15 +333,18 @@
 
     var tabName = tab.getAttribute('data-tab');
     state.activeTab = tabName;
+    setHash(tabName);
+    activateTab(tabName);
+  }
 
+  function activateTab(tabName) {
     // Update tab buttons
     var tabs = els.tabBar.querySelectorAll('.tab-item');
     for (var i = 0; i < tabs.length; i++) {
-      tabs[i].classList.remove('tab-item--active');
-      tabs[i].setAttribute('aria-selected', 'false');
+      var isActive = tabs[i].getAttribute('data-tab') === tabName;
+      tabs[i].classList.toggle('tab-item--active', isActive);
+      tabs[i].setAttribute('aria-selected', isActive ? 'true' : 'false');
     }
-    tab.classList.add('tab-item--active');
-    tab.setAttribute('aria-selected', 'true');
 
     // Update panels
     var panels = document.querySelectorAll('.tab-panel');
@@ -458,16 +473,6 @@
       if (window.SKILLS[i].id === id) return window.SKILLS[i];
     }
     return null;
-  }
-
-  function getStatusBadgeHtml(status) {
-    if (status === 'active') {
-      return '<span class="badge badge--active"><span class="badge__dot"></span>Active</span>';
-    }
-    if (status === 'installed') {
-      return '<span class="badge badge--installed">Installed</span>';
-    }
-    return '<span class="badge badge--roadmap">Roadmap</span>';
   }
 
   function getAuthBadgeHtml(authStatus) {

@@ -8,7 +8,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>&#x26A1;</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -20,7 +20,7 @@
         <span class="header__icon">&#x26A1;</span>
         <div>
           <h1 class="header__title">Skill Dashboard</h1>
-          <span class="header__subtitle">OpenClaw + Claude Code</span>
+          <span class="header__subtitle"><span id="skillCount"></span> skills &middot; OpenClaw + Claude Code</span>
         </div>
       </div>
       <div class="header__meta">
@@ -28,9 +28,6 @@
         <span id="currentDate"></span>
       </div>
     </header>
-
-    <!-- Stats Row -->
-    <div class="stats-row" id="statsRow"></div>
 
     <!-- Search -->
     <div class="search-wrapper">
@@ -42,14 +39,14 @@
         type="text"
         id="searchInput"
         class="search-bar"
-        placeholder="Search skills, triggers, or categories..."
+        placeholder="Search skills..."
         autocomplete="off"
       >
       <kbd class="search-wrapper__kbd">Ctrl+K</kbd>
     </div>
 
-    <!-- Recently Used -->
-    <section class="recently-used" id="recentlyUsed" aria-label="Recently Used Skills">
+    <!-- Recently Used (hidden when empty via JS) -->
+    <section class="recently-used recently-used--hidden" id="recentlyUsed" aria-label="Recently Used Skills">
       <h2 class="section-label">Recently Used</h2>
       <div class="recently-used__scroll" id="recentlyUsedList"></div>
     </section>
@@ -81,8 +78,8 @@
           <table class="cheat-table">
             <thead>
               <tr>
-                <th>Say This</th>
-                <th>Activates</th>
+                <th>Trigger</th>
+                <th>Skill</th>
                 <th>Category</th>
               </tr>
             </thead>
