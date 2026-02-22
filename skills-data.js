@@ -45,6 +45,37 @@ window.SKILLS = [
     keywords: ['coding', 'workflow', 'session', 'planning', 'worktree'],
   },
 
+  {
+    id: 'bounty-hunting',
+    name: 'Bounty Hunting',
+    trigger: 'bounty-hunting',
+    description: 'Smart contract security audit methodology for bug bounties on Cantina, Immunefi, Code4rena. Pre-submission checklist, PoC templates, report writing.',
+    category: 'security',
+    source: 'claude-skill',
+    status: 'active',
+    keywords: ['bounty', 'security', 'audit', 'smart contract', 'cantina', 'immunefi', 'code4rena'],
+  },
+  {
+    id: 'dev-solidity',
+    name: 'Solidity Dev',
+    trigger: 'dev-solidity',
+    description: 'EVM development with Solidity, Foundry, and security patterns. For Ethereum, Base, and L2 builds.',
+    category: 'web3',
+    source: 'claude-skill',
+    status: 'active',
+    keywords: ['solidity', 'evm', 'ethereum', 'foundry', 'smart contract', 'defi', 'base'],
+  },
+  {
+    id: 'dev-solana',
+    name: 'Solana Dev',
+    trigger: 'dev-solana',
+    description: 'Solana development with Anchor, Pinocchio, and security patterns. For hackathons and audits.',
+    category: 'web3',
+    source: 'claude-skill',
+    status: 'active',
+    keywords: ['solana', 'anchor', 'rust', 'pinocchio', 'spl', 'token-2022', 'hackathon'],
+  },
+
   // ── Claude Code Plugins ──
   {
     id: 'review-loop',
