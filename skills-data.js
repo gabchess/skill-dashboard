@@ -894,6 +894,58 @@ window.SKILLS = [
     keywords: ['defi', 'amm', 'lending', 'staking', 'yield', 'governance', 'solidity'],
   },
 
+  // ── ECC: Everything Claude Code ──
+  {
+    id: 'frontend-patterns',
+    name: 'Frontend Patterns',
+    trigger: 'frontend-patterns',
+    description: 'React and Next.js patterns, state management, performance optimization, and UI best practices.',
+    category: 'development',
+    source: 'ecc',
+    status: 'active',
+    keywords: ['react', 'nextjs', 'frontend', 'ui', 'state', 'performance', 'patterns'],
+  },
+  {
+    id: 'backend-patterns',
+    name: 'Backend Patterns',
+    trigger: 'backend-patterns',
+    description: 'API design, database optimization, and server-side patterns for Node.js, Express, and Next.js API routes.',
+    category: 'development',
+    source: 'ecc',
+    status: 'active',
+    keywords: ['api', 'backend', 'nodejs', 'express', 'nextjs', 'server', 'patterns'],
+  },
+  {
+    id: 'postgres-patterns',
+    name: 'Postgres Patterns',
+    trigger: 'postgres-patterns',
+    description: 'PostgreSQL query optimization, schema design, indexing, and security. Based on Supabase best practices.',
+    category: 'development',
+    source: 'ecc',
+    status: 'active',
+    keywords: ['postgres', 'postgresql', 'supabase', 'database', 'sql', 'query', 'indexing'],
+  },
+  {
+    id: 'security-review',
+    name: 'Security Review',
+    trigger: 'security-review',
+    description: 'Comprehensive security checklist for auth, user input, secrets, API endpoints, and payment features.',
+    category: 'security',
+    source: 'ecc',
+    status: 'active',
+    keywords: ['security', 'auth', 'owasp', 'checklist', 'review', 'vulnerabilities', 'payments'],
+  },
+  {
+    id: 'continuous-learning-v2',
+    name: 'Continuous Learning',
+    trigger: 'continuous-learning-v2',
+    description: 'Instinct-based learning that observes sessions, creates atomic instincts with confidence scoring, and evolves them into reusable skills.',
+    category: 'meta',
+    source: 'ecc',
+    status: 'active',
+    keywords: ['learning', 'instincts', 'patterns', 'evolve', 'skills', 'session', 'memory'],
+  },
+
   // ── System Skills ──
   {
     id: 'keybindings-help',
