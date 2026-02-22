@@ -298,6 +298,11 @@ body {
   margin-bottom: var(--space-md);
 }
 
+/* Explicit font-family on buttons (browsers don't inherit) */
+button {
+  font-family: var(--font-mono);
+}
+
 .filter-chip {
   padding: 4px 12px;
   background: var(--color-surface);
@@ -543,6 +548,8 @@ body {
 }
 
 .api-card__link {
+  display: block;
+  margin-top: var(--space-sm);
   font-size: 0.7rem;
   color: var(--color-cyan);
   text-decoration: none;
@@ -555,6 +562,11 @@ body {
 }
 
 /* ========== CHEAT SHEET ========== */
+.cheat-sheet-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 .cheat-table {
   width: 100%;
   border-collapse: collapse;
@@ -622,8 +634,11 @@ body {
 }
 
 .roadmap-card:hover {
-  border-color: var(--color-border-hover);
-  box-shadow: none;
+  border-top-color: var(--color-border-hover);
+  border-right-color: var(--color-border-hover);
+  border-bottom-color: var(--color-border-hover);
+  border-left-color: var(--color-purple);
+  box-shadow: var(--glow-purple);
   transform: none;
 }
 
@@ -653,6 +668,7 @@ body {
   padding: var(--space-2xl) var(--space-md);
   color: var(--color-text-muted);
   font-size: 0.85rem;
+  grid-column: 1 / -1;
 }
 
 .empty-state__icon {
@@ -707,6 +723,16 @@ body {
   border-top: 1px solid var(--color-border);
   font-size: 0.7rem;
   color: var(--color-text-muted);
+}
+
+/* ========== FOCUS STYLES ========== */
+.skill-card:focus-visible,
+.filter-chip:focus-visible,
+.tab-item:focus-visible,
+.recent-chip:focus-visible,
+.copy-btn:focus-visible {
+  outline: 2px solid var(--color-green);
+  outline-offset: 2px;
 }
 
 /* ========== ANIMATIONS ========== */

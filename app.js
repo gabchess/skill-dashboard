@@ -51,7 +51,12 @@
   // ========== LOCALSTORAGE ==========
   function loadRecentlyUsed() {
     try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      var data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      if (!Array.isArray(data)) return [];
+      // Filter out stale IDs that no longer exist in SKILLS
+      return data.filter(function (id) {
+        return typeof id === 'string' && findSkill(id) !== null;
+      });
     } catch (e) {
       return [];
     }
@@ -174,12 +179,30 @@
   }
 
   function renderApiGrid() {
-    var apis = window.APIS;
+    var apis = getFilteredApis();
+    if (apis.length === 0) {
+      els.apisGrid.innerHTML =
+        '<div class="empty-state">' +
+        '<div class="empty-state__icon">🔌</div>' +
+        'No APIs match your search.' +
+        '</div>';
+      return;
+    }
     var html = '';
     for (var i = 0; i < apis.length; i++) {
       html += createApiCard(apis[i]);
     }
     els.apisGrid.innerHTML = html;
+  }
+
+  function getFilteredApis() {
+    var apis = window.APIS;
+    if (!state.searchQuery) return apis;
+    var q = state.searchQuery.toLowerCase();
+    return apis.filter(function (api) {
+      return api.name.toLowerCase().indexOf(q) > -1 ||
+        api.description.toLowerCase().indexOf(q) > -1;
+    });
   }
 
   function createApiCard(api) {
@@ -193,6 +216,9 @@
         getAuthBadgeHtml(api.authStatus) +
         '<span class="api-card__cost">' + escapeHtml(api.monthlyCost) + '</span>' +
       '</div>' +
+      '<a class="api-card__link" href="' + escapeHtml(api.quickLink) + '" target="_blank" rel="noopener">' +
+        escapeHtml(api.quickLink.replace('https://', '')) + ' ↗' +
+      '</a>' +
       '</div>';
   }
 
@@ -286,6 +312,7 @@
     state.searchQuery = e.target.value.trim();
     renderSkillsGrid();
     renderCheatSheet();
+    renderApiGrid();
   }
 
   function handleTabClick(e) {
@@ -348,8 +375,12 @@
   }
 
   function handleCopyTrigger(text, btn) {
-    navigator.clipboard.writeText(text).then(function () {
-      var original = btn.innerHTML;
+    // Prevent race condition from double-clicks
+    if (btn.dataset.copying === 'true') return;
+    btn.dataset.copying = 'true';
+    var original = btn.innerHTML;
+
+    function showCopied() {
       btn.classList.add('copy-btn--copied');
       btn.innerHTML =
         '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>' +
@@ -357,26 +388,30 @@
       setTimeout(function () {
         btn.classList.remove('copy-btn--copied');
         btn.innerHTML = original;
+        btn.dataset.copying = 'false';
       }, 2000);
-    }).catch(function () {
-      // Fallback for non-HTTPS
-      var ta = document.createElement('textarea');
-      ta.value = text;
-      ta.style.position = 'fixed';
-      ta.style.opacity = '0';
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
+    }
 
-      btn.classList.add('copy-btn--copied');
-      var original = btn.innerHTML;
-      btn.textContent = 'copied!';
-      setTimeout(function () {
-        btn.classList.remove('copy-btn--copied');
-        btn.innerHTML = original;
-      }, 2000);
-    });
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(showCopied).catch(function () {
+        fallbackCopy(text);
+        showCopied();
+      });
+    } else {
+      fallbackCopy(text);
+      showCopied();
+    }
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); } catch (e) { /* ignore */ }
+    document.body.removeChild(ta);
   }
 
   function handleKeyboardShortcut(e) {
@@ -391,6 +426,7 @@
       state.searchQuery = '';
       renderSkillsGrid();
       renderCheatSheet();
+      renderApiGrid();
     }
   }
 
@@ -408,7 +444,7 @@
   }
 
   function escapeHtml(str) {
-    if (!str) return '';
+    if (str === null || str === undefined) return '';
     return String(str)
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')

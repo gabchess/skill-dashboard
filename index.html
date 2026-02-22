@@ -56,10 +56,10 @@
 
     <!-- Tab Navigation -->
     <nav class="tab-bar" id="tabBar" role="tablist" aria-label="Dashboard sections">
-      <button class="tab-item tab-item--active" role="tab" aria-selected="true" data-tab="skills">Skills</button>
-      <button class="tab-item" role="tab" aria-selected="false" data-tab="apis">APIs &amp; Tools</button>
-      <button class="tab-item" role="tab" aria-selected="false" data-tab="cheatsheet">Cheat Sheet</button>
-      <button class="tab-item" role="tab" aria-selected="false" data-tab="roadmap">Roadmap</button>
+      <button class="tab-item tab-item--active" role="tab" aria-selected="true" aria-controls="panel-skills" data-tab="skills">Skills</button>
+      <button class="tab-item" role="tab" aria-selected="false" aria-controls="panel-apis" data-tab="apis">APIs &amp; Tools</button>
+      <button class="tab-item" role="tab" aria-selected="false" aria-controls="panel-cheatsheet" data-tab="cheatsheet">Cheat Sheet</button>
+      <button class="tab-item" role="tab" aria-selected="false" aria-controls="panel-roadmap" data-tab="roadmap">Roadmap</button>
     </nav>
 
     <!-- Tab Panels -->
@@ -77,16 +77,18 @@
 
       <!-- Cheat Sheet Panel -->
       <section class="tab-panel" id="panel-cheatsheet" role="tabpanel">
-        <table class="cheat-table">
-          <thead>
-            <tr>
-              <th>Say This</th>
-              <th>Activates</th>
-              <th>Category</th>
-            </tr>
-          </thead>
-          <tbody id="cheatBody"></tbody>
-        </table>
+        <div class="cheat-sheet-wrapper">
+          <table class="cheat-table">
+            <thead>
+              <tr>
+                <th>Say This</th>
+                <th>Activates</th>
+                <th>Category</th>
+              </tr>
+            </thead>
+            <tbody id="cheatBody"></tbody>
+          </table>
+        </div>
       </section>
 
       <!-- Roadmap Panel -->
