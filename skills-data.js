@@ -1,6 +1,6 @@
 // ========== SKILL DASHBOARD DATA ==========
 // Source: marketplace.json + ~/.claude/skills/ + system skills
-// Last updated: 2026-02-22 (+20 Antigravity skills: Security, Web3, PM, Dev)
+// Last updated: 2026-02-23 (+card-art-grimoire: MTG-style tier card art for Agent Grimoire)
 
 window.CATEGORIES = {
   'all':              { label: 'All',               color: 'green' },
@@ -74,6 +74,17 @@ window.SKILLS = [
     source: 'claude-skill',
     status: 'active',
     keywords: ['solana', 'anchor', 'rust', 'pinocchio', 'spl', 'token-2022', 'hackathon'],
+  },
+
+  {
+    id: 'card-art-grimoire',
+    name: 'Card Art — Grimoire',
+    trigger: '"card art" / "tier card" / "mtg style" / "generate card"',
+    description: 'Generate MTG-style tier card art for Agent Grimoire. Uses the real Magic: The Gathering illustration system — 6-component brief format, oil painting on canvas, artist reference map per tier energy. All 9 Mage prompts locked and ready.',
+    category: 'design-frontend',
+    source: 'claude-skill',
+    status: 'active',
+    keywords: ['card art', 'mtg', 'magic the gathering', 'tier card', 'image generation', 'dall-e', 'agent grimoire', 'oil painting'],
   },
 
   // ── Claude Code Plugins ──
