@@ -85,6 +85,18 @@ window.SKILLS = [
     keywords: ['merch', 'vector', 'figma', 'production', 'screen print', 'mcp', 'illustrator alternative'],
   },
   {
+    id: 'social-crypto-legend',
+    name: 'Social Crypto Legend',
+    trigger: '/social-crypto-legend',
+    description: 'Legendary social writing brain for crypto builders. Voice memo tweets, sneak peeks, and contest posts that sound like a real person wrote them. Fuses tweet-style-guide + humanizer 24-pattern kill list. No hashtags. Ever.',
+    bundle: 'marketing-growth',
+    tier: 'legendary',
+    grimoire_ready: true,
+    source: 'aria-custom',
+    status: 'active',
+    keywords: ['twitter', 'x', 'social', 'tweet', 'voice memo', 'build in public', 'crypto writing', 'humanizer'],
+  },
+  {
     id: 'humanizer',
     name: 'Humanizer',
     trigger: '"humanize text"',
