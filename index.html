@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Skill Dashboard</title>
-  <meta name="description" content="Find any AI skill and its trigger phrase in under 5 seconds">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>&#x26A1;</text></svg>">
+  <title>Agent Grimoire</title>
+  <meta name="description" content="AI skill grimoire — find any skill and its trigger in under 5 seconds">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>&#x1F4D6;</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -17,14 +17,14 @@
     <!-- Header -->
     <header class="header">
       <div class="header__brand">
-        <span class="header__icon">&#x26A1;</span>
+        <span class="header__icon">&#x1F4D6;</span>
         <div>
-          <h1 class="header__title">Skill Dashboard</h1>
-          <span class="header__subtitle"><span id="skillCount"></span> skills &middot; OpenClaw + Claude Code</span>
+          <h1 class="header__title">Agent Grimoire</h1>
+          <span class="header__subtitle"><span id="skillCount"></span> skills &middot; agentlvlup.ai</span>
         </div>
       </div>
       <div class="header__meta">
-        <span class="header__version">v1.0</span>
+        <span class="header__version">v2.0</span>
         <span id="currentDate"></span>
       </div>
     </header>
@@ -34,7 +34,7 @@
       <span class="search-wrapper__icon" aria-hidden="true">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       </span>
-      <label for="searchInput" class="sr-only">Search skills, triggers, categories</label>
+      <label for="searchInput" class="sr-only">Search skills, triggers, bundles</label>
       <input
         type="text"
         id="searchInput"
@@ -45,60 +45,29 @@
       <kbd class="search-wrapper__kbd">Ctrl+K</kbd>
     </div>
 
-    <!-- Recently Used (hidden when empty via JS) -->
-    <section class="recently-used recently-used--hidden" id="recentlyUsed" aria-label="Recently Used Skills">
-      <h2 class="section-label">Recently Used</h2>
-      <div class="recently-used__scroll" id="recentlyUsedList"></div>
+    <!-- Stats Strip -->
+    <div class="stats-strip" id="statsStrip"></div>
+
+    <!-- Bundle Tabs -->
+    <nav class="bundle-tabs" id="bundleTabs" role="tablist" aria-label="Skill bundles"></nav>
+
+    <!-- Tier Filters -->
+    <div class="tier-filters" id="tierFilters"></div>
+
+    <!-- Legendary Spotlight -->
+    <section class="legendary-spotlight" id="legendarySpotlight" aria-label="Legendary Skills">
+      <h2 class="section-label section-label--gold">&#9733; Legendary Spotlight</h2>
+      <div class="legendary-spotlight__scroll" id="legendaryList"></div>
     </section>
 
-    <!-- Tab Navigation -->
-    <nav class="tab-bar" id="tabBar" role="tablist" aria-label="Dashboard sections">
-      <button class="tab-item tab-item--active" role="tab" aria-selected="true" aria-controls="panel-skills" data-tab="skills">Skills</button>
-      <button class="tab-item" role="tab" aria-selected="false" aria-controls="panel-apis" data-tab="apis">APIs &amp; Tools</button>
-      <button class="tab-item" role="tab" aria-selected="false" aria-controls="panel-cheatsheet" data-tab="cheatsheet">Cheat Sheet</button>
-      <button class="tab-item" role="tab" aria-selected="false" aria-controls="panel-roadmap" data-tab="roadmap">Roadmap</button>
-    </nav>
-
-    <!-- Tab Panels -->
+    <!-- Skills Grid -->
     <main>
-      <!-- Skills Panel -->
-      <section class="tab-panel tab-panel--active" id="panel-skills" role="tabpanel">
-        <div class="filter-bar-wrap">
-          <div class="filter-bar" id="filterBar"></div>
-        </div>
-        <div class="skills-grid" id="skillsGrid"></div>
-      </section>
-
-      <!-- APIs Panel -->
-      <section class="tab-panel" id="panel-apis" role="tabpanel">
-        <div class="skills-grid" id="apisGrid"></div>
-      </section>
-
-      <!-- Cheat Sheet Panel -->
-      <section class="tab-panel" id="panel-cheatsheet" role="tabpanel">
-        <div class="cheat-sheet-wrapper">
-          <table class="cheat-table">
-            <thead>
-              <tr>
-                <th>Trigger</th>
-                <th>Skill</th>
-                <th>Category</th>
-              </tr>
-            </thead>
-            <tbody id="cheatBody"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- Roadmap Panel -->
-      <section class="tab-panel" id="panel-roadmap" role="tabpanel">
-        <div class="roadmap-grid" id="roadmapGrid"></div>
-      </section>
+      <div class="skills-grid" id="skillsGrid"></div>
     </main>
 
     <!-- Footer -->
     <footer class="footer">
-      <span>Skill Dashboard &middot; Gabe</span>
+      <span>Agent Grimoire &middot; agentlvlup.ai</span>
       <span>Built for AI skill orchestration</span>
     </footer>
   </div>

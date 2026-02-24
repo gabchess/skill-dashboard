@@ -1,3 +1,5 @@
+> **Note:** This repo is the foundation for **Agent Grimoire** (agentlvlup.ai). All new development continues here under the new brand.
+
 # Skill Dashboard
 
 Find any AI skill and its trigger phrase in under 5 seconds.

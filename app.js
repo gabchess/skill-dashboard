@@ -2,30 +2,28 @@
   'use strict';
 
   // ========== STATE ==========
-  var STORAGE_KEY = 'skill-dashboard-recently-used';
-  var MAX_RECENT = 8;
-
   var state = {
-    activeTab: getTabFromHash() || 'skills',
-    activeCategory: 'all',
+    activeBundle: 'all',
+    activeTier: 'all',
+    showNoise: false,
     searchQuery: '',
-    recentlyUsed: loadRecentlyUsed(),
   };
 
   // ========== DOM REFS ==========
   var els = {
     searchInput: document.getElementById('searchInput'),
-    recentlyUsed: document.getElementById('recentlyUsed'),
-    recentlyUsedList: document.getElementById('recentlyUsedList'),
+    statsStrip: document.getElementById('statsStrip'),
+    bundleTabs: document.getElementById('bundleTabs'),
+    tierFilters: document.getElementById('tierFilters'),
+    legendarySpotlight: document.getElementById('legendarySpotlight'),
+    legendaryList: document.getElementById('legendaryList'),
     skillsGrid: document.getElementById('skillsGrid'),
-    apisGrid: document.getElementById('apisGrid'),
-    cheatBody: document.getElementById('cheatBody'),
-    filterBar: document.getElementById('filterBar'),
-    tabBar: document.getElementById('tabBar'),
     currentDate: document.getElementById('currentDate'),
     skillCount: document.getElementById('skillCount'),
-    roadmapGrid: document.getElementById('roadmapGrid'),
   };
+
+  // ========== TIER ORDER ==========
+  var TIER_ORDER = { legendary: 0, advanced: 1, standard: 2, noise: 3 };
 
   // ========== INIT ==========
   function init() {
@@ -33,130 +31,170 @@
       month: 'short', day: 'numeric', year: 'numeric'
     });
 
-    // Skill count in header
-    els.skillCount.textContent = window.SKILLS.length;
+    var visibleCount = countVisible();
+    els.skillCount.textContent = visibleCount;
 
-    renderFilterChips();
-    renderRecentlyUsed();
+    renderStats();
+    renderBundleTabs();
+    renderTierFilters();
+    renderLegendarySpotlight();
     renderSkillsGrid();
-    renderApiGrid();
-    renderCheatSheet();
-    renderRoadmap();
-
-    // Activate tab from hash
-    activateTab(state.activeTab);
 
     // Events
     els.searchInput.addEventListener('input', debounce(handleSearch, 150));
-    els.tabBar.addEventListener('click', handleTabClick);
-    els.filterBar.addEventListener('click', handleFilterClick);
+    els.bundleTabs.addEventListener('click', handleBundleClick);
+    els.tierFilters.addEventListener('click', handleTierClick);
     document.addEventListener('keydown', handleKeyboardShortcut);
     document.addEventListener('click', handleGlobalClick);
-    window.addEventListener('hashchange', handleHashChange);
   }
 
-  // ========== HASH ROUTING ==========
-  function getTabFromHash() {
-    var hash = window.location.hash.replace('#', '');
-    var valid = ['skills', 'apis', 'cheatsheet', 'roadmap'];
-    return valid.indexOf(hash) > -1 ? hash : null;
-  }
-
-  function handleHashChange() {
-    var tab = getTabFromHash();
-    if (tab && tab !== state.activeTab) {
-      state.activeTab = tab;
-      activateTab(tab);
+  // ========== COUNTS ==========
+  function countVisible() {
+    var count = 0;
+    for (var i = 0; i < window.SKILLS.length; i++) {
+      if (window.SKILLS[i].tier !== 'noise') count++;
     }
+    return count;
   }
 
-  function setHash(tab) {
-    if (history.replaceState) {
-      history.replaceState(null, '', '#' + tab);
-    } else {
-      window.location.hash = tab;
+  function countByTier(tier) {
+    var count = 0;
+    for (var i = 0; i < window.SKILLS.length; i++) {
+      if (window.SKILLS[i].tier === tier) count++;
     }
+    return count;
   }
 
-  // ========== LOCALSTORAGE ==========
-  function loadRecentlyUsed() {
-    try {
-      var data = JSON.parse(localStorage.getItem(STORAGE_KEY));
-      if (!Array.isArray(data)) return [];
-      return data.filter(function (id) {
-        return typeof id === 'string' && findSkill(id) !== null;
-      });
-    } catch (e) {
-      return [];
+  function countBundles() {
+    var bundles = {};
+    for (var i = 0; i < window.SKILLS.length; i++) {
+      if (window.SKILLS[i].tier !== 'noise') {
+        bundles[window.SKILLS[i].bundle] = true;
+      }
     }
-  }
-
-  function saveRecentlyUsed() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.recentlyUsed));
-    } catch (e) { /* quota exceeded, ignore */ }
-  }
-
-  function addToRecentlyUsed(skillId) {
-    var idx = state.recentlyUsed.indexOf(skillId);
-    if (idx > -1) state.recentlyUsed.splice(idx, 1);
-    state.recentlyUsed.unshift(skillId);
-    if (state.recentlyUsed.length > MAX_RECENT) {
-      state.recentlyUsed = state.recentlyUsed.slice(0, MAX_RECENT);
-    }
-    saveRecentlyUsed();
-    renderRecentlyUsed();
+    return Object.keys(bundles).length;
   }
 
   // ========== RENDERING ==========
-  function renderRecentlyUsed() {
-    if (state.recentlyUsed.length === 0) {
-      els.recentlyUsed.classList.add('recently-used--hidden');
+  function renderStats() {
+    var legendary = countByTier('legendary');
+    var advanced = countByTier('advanced');
+    var standard = countByTier('standard');
+    var bundles = countBundles();
+
+    els.statsStrip.innerHTML =
+      '<span class="stat-legendary">' + legendary + ' Legendary</span>' +
+      ' &middot; ' +
+      '<span class="stat-advanced">' + advanced + ' Advanced</span>' +
+      ' &middot; ' +
+      '<span class="stat-standard">' + standard + ' Standard</span>' +
+      ' across ' + bundles + ' bundles';
+  }
+
+  function renderBundleTabs() {
+    var html = '';
+    var keys = Object.keys(window.BUNDLES);
+    for (var i = 0; i < keys.length; i++) {
+      var key = keys[i];
+      var bundle = window.BUNDLES[key];
+      var activeClass = key === state.activeBundle ? ' bundle-tab--active' : '';
+      html += '<button class="bundle-tab' + activeClass + '" role="tab" ' +
+        'aria-selected="' + (key === state.activeBundle ? 'true' : 'false') + '" ' +
+        'data-bundle="' + key + '">' +
+        escapeHtml(bundle.label) +
+        '</button>';
+    }
+    els.bundleTabs.innerHTML = html;
+  }
+
+  function renderTierFilters() {
+    var tiers = [
+      { key: 'all', label: 'All Tiers', cls: '' },
+      { key: 'legendary', label: 'Legendary', cls: ' tier-chip--legendary' },
+      { key: 'advanced', label: 'Advanced', cls: ' tier-chip--advanced' },
+      { key: 'standard', label: 'Standard', cls: ' tier-chip--standard' },
+    ];
+
+    var html = '';
+    for (var i = 0; i < tiers.length; i++) {
+      var t = tiers[i];
+      var activeClass = t.key === state.activeTier ? ' tier-chip--active' : '';
+      html += '<button class="tier-chip' + t.cls + activeClass + '" data-tier="' + t.key + '">' +
+        t.label + '</button>';
+    }
+
+    // Divider + noise toggle
+    html += '<span class="tier-divider"></span>';
+    html += '<button class="noise-toggle' + (state.showNoise ? ' noise-toggle--active' : '') + '" data-noise-toggle>' +
+      (state.showNoise ? 'Hide Noise' : 'Show Noise') + '</button>';
+
+    els.tierFilters.innerHTML = html;
+  }
+
+  function renderLegendarySpotlight() {
+    // Only show on All bundle, All tier, no search
+    var shouldShow = state.activeBundle === 'all' &&
+      state.activeTier === 'all' &&
+      !state.searchQuery;
+
+    if (!shouldShow) {
+      els.legendarySpotlight.classList.add('legendary-spotlight--hidden');
       return;
     }
 
-    els.recentlyUsed.classList.remove('recently-used--hidden');
-    var html = '';
-    for (var i = 0; i < state.recentlyUsed.length; i++) {
-      var skill = findSkill(state.recentlyUsed[i]);
-      if (skill) {
-        html += createRecentChip(skill);
+    var legendarySkills = [];
+    for (var i = 0; i < window.SKILLS.length; i++) {
+      if (window.SKILLS[i].tier === 'legendary') {
+        legendarySkills.push(window.SKILLS[i]);
       }
     }
-    els.recentlyUsedList.innerHTML = html;
-  }
 
-  function createRecentChip(skill) {
-    return '<button class="recent-chip" data-skill-id="' + escapeHtml(skill.id) + '">' +
-      '<span>' + escapeHtml(skill.name) + '</span>' +
-      '<span class="recent-chip__trigger">' + escapeHtml(skill.trigger) + '</span>' +
-      '</button>';
-  }
-
-  function renderFilterChips() {
-    var html = '';
-    var keys = Object.keys(window.CATEGORIES);
-    for (var i = 0; i < keys.length; i++) {
-      var key = keys[i];
-      var cat = window.CATEGORIES[key];
-      var activeClass = key === state.activeCategory ? ' filter-chip--active' : '';
-      html += '<button class="filter-chip' + activeClass + '" data-category="' + key + '">' +
-        escapeHtml(cat.label) +
-        '</button>';
+    if (legendarySkills.length === 0) {
+      els.legendarySpotlight.classList.add('legendary-spotlight--hidden');
+      return;
     }
-    els.filterBar.innerHTML = html;
+
+    els.legendarySpotlight.classList.remove('legendary-spotlight--hidden');
+
+    var html = '';
+    for (var i = 0; i < legendarySkills.length; i++) {
+      html += createSpotlightCard(legendarySkills[i]);
+    }
+    els.legendaryList.innerHTML = html;
+  }
+
+  function createSpotlightCard(skill) {
+    var bundleInfo = window.BUNDLES[skill.bundle] || { label: skill.bundle };
+    return '<div class="spotlight-card" data-skill-id="' + escapeHtml(skill.id) + '" tabindex="0">' +
+      '<div class="spotlight-card__tier">&#9733; LEGENDARY</div>' +
+      '<code class="spotlight-card__trigger">' + escapeHtml(skill.trigger) + '</code>' +
+      '<h3 class="spotlight-card__name">' + escapeHtml(skill.name) + '</h3>' +
+      '<p class="spotlight-card__desc">' + escapeHtml(skill.description) + '</p>' +
+      '<div class="spotlight-card__meta">' +
+        '<span class="spotlight-card__bundle">' + escapeHtml(bundleInfo.label) + '</span>' +
+        (skill.grimoire_ready ? '<span class="spotlight-card__grimoire">&#9733;</span>' : '') +
+      '</div>' +
+      '</div>';
   }
 
   function renderSkillsGrid() {
     var filtered = getFilteredSkills();
+
     if (filtered.length === 0) {
       els.skillsGrid.innerHTML =
         '<div class="empty-state">' +
-        '<div class="empty-state__icon">🔍</div>' +
+        '<div class="empty-state__icon">&#x1F50D;</div>' +
         'No skills match your search.' +
         '</div>';
       return;
     }
+
+    // Sort by tier order, then by name
+    filtered.sort(function (a, b) {
+      var tierDiff = TIER_ORDER[a.tier] - TIER_ORDER[b.tier];
+      if (tierDiff !== 0) return tierDiff;
+      return a.name.localeCompare(b.name);
+    });
 
     var html = '';
     for (var i = 0; i < filtered.length; i++) {
@@ -166,11 +204,15 @@
   }
 
   function createSkillCard(skill) {
-    var catInfo = window.CATEGORIES[skill.category] || { label: skill.category, color: 'green' };
-    var catColor = catInfo.color || 'green';
+    var bundleInfo = window.BUNDLES[skill.bundle] || { label: skill.bundle };
+    var tierInfo = window.TIERS[skill.tier] || { label: skill.tier };
 
-    return '<article class="card skill-card" data-skill-id="' + escapeHtml(skill.id) + '" data-cat-color="' + catColor + '" tabindex="0">' +
-      // Row 1: Trigger phrase (hero) + copy button
+    return '<article class="card skill-card" data-skill-id="' + escapeHtml(skill.id) + '" data-tier="' + escapeHtml(skill.tier) + '" tabindex="0">' +
+      // Tier badge top right
+      '<div class="skill-card__tier-badge skill-card__tier-badge--' + escapeHtml(skill.tier) + '">' +
+        escapeHtml(tierInfo.label) +
+      '</div>' +
+      // Trigger row
       '<div class="skill-card__trigger-row">' +
         '<code class="trigger-phrase trigger-phrase--hero">' + escapeHtml(skill.trigger) + '</code>' +
         '<button class="copy-btn" data-trigger="' + escapeHtml(skill.trigger) + '" title="Copy trigger">' +
@@ -178,108 +220,17 @@
           ' copy' +
         '</button>' +
       '</div>' +
-      // Row 2: Name
+      // Name
       '<h3 class="skill-card__name">' + escapeHtml(skill.name) + '</h3>' +
-      // Row 3: Description
+      // Description
       '<p class="skill-card__desc">' + escapeHtml(skill.description) + '</p>' +
-      // Row 4: Category + source
+      // Meta row
       '<div class="skill-card__meta">' +
-        '<span class="skill-card__category">' + escapeHtml(catInfo.label) + '</span>' +
+        '<span class="skill-card__bundle">' + escapeHtml(bundleInfo.label) + '</span>' +
         '<span class="skill-card__source">' + escapeHtml(skill.source) + '</span>' +
+        (skill.grimoire_ready ? '<span class="skill-card__grimoire">&#9733;</span>' : '') +
       '</div>' +
       '</article>';
-  }
-
-  function renderApiGrid() {
-    var apis = getFilteredApis();
-    if (apis.length === 0) {
-      els.apisGrid.innerHTML =
-        '<div class="empty-state">' +
-        '<div class="empty-state__icon">🔌</div>' +
-        'No APIs match your search.' +
-        '</div>';
-      return;
-    }
-    var html = '';
-    for (var i = 0; i < apis.length; i++) {
-      html += createApiCard(apis[i]);
-    }
-    els.apisGrid.innerHTML = html;
-  }
-
-  function getFilteredApis() {
-    var apis = window.APIS;
-    if (!state.searchQuery) return apis;
-    var q = state.searchQuery.toLowerCase();
-    return apis.filter(function (api) {
-      return api.name.toLowerCase().indexOf(q) > -1 ||
-        api.description.toLowerCase().indexOf(q) > -1;
-    });
-  }
-
-  function createApiCard(api) {
-    return '<div class="card api-card">' +
-      '<div class="api-card__header">' +
-        '<span class="api-card__icon">' + api.icon + '</span>' +
-        '<span class="api-card__name">' + escapeHtml(api.name) + '</span>' +
-      '</div>' +
-      '<p class="api-card__desc">' + escapeHtml(api.description) + '</p>' +
-      '<div class="api-card__footer">' +
-        getAuthBadgeHtml(api.authStatus) +
-        '<span class="api-card__cost">' + escapeHtml(api.monthlyCost) + '</span>' +
-      '</div>' +
-      '<a class="api-card__link" href="' + escapeHtml(api.quickLink) + '" target="_blank" rel="noopener">' +
-        escapeHtml(api.quickLink.replace('https://', '')) + ' ↗' +
-      '</a>' +
-      '</div>';
-  }
-
-  function renderCheatSheet() {
-    var skills = getFilteredSkillsForCheatSheet();
-    skills.sort(function (a, b) {
-      return a.trigger.localeCompare(b.trigger);
-    });
-
-    if (skills.length === 0) {
-      els.cheatBody.innerHTML =
-        '<tr><td colspan="3" class="empty-state">No matching triggers found.</td></tr>';
-      return;
-    }
-
-    var html = '';
-    for (var i = 0; i < skills.length; i++) {
-      html += createCheatRow(skills[i]);
-    }
-    els.cheatBody.innerHTML = html;
-  }
-
-  function createCheatRow(skill) {
-    var catInfo = window.CATEGORIES[skill.category] || { label: skill.category };
-    return '<tr class="cheat-row" data-skill-id="' + escapeHtml(skill.id) + '">' +
-      '<td>' +
-        '<span class="cheat-row__trigger-cell">' +
-          '<code class="trigger-phrase">' + escapeHtml(skill.trigger) + '</code>' +
-          '<button class="copy-btn copy-btn--inline" data-trigger="' + escapeHtml(skill.trigger) + '">copy</button>' +
-        '</span>' +
-      '</td>' +
-      '<td>' + escapeHtml(skill.name) + '</td>' +
-      '<td>' + escapeHtml(catInfo.label) + '</td>' +
-      '</tr>';
-  }
-
-  function renderRoadmap() {
-    var items = window.ROADMAP;
-    var html = '';
-    for (var i = 0; i < items.length; i++) {
-      var item = items[i];
-      html += '<div class="card roadmap-card">' +
-        '<h3 class="roadmap-card__title">' + escapeHtml(item.title) + '</h3>' +
-        '<p class="roadmap-card__desc">' + escapeHtml(item.description) + '</p>' +
-        '<span class="badge badge--roadmap">Planned</span>' +
-        (item.hook ? '<p class="roadmap-card__hook">' + escapeHtml(item.hook) + '</p>' : '') +
-        '</div>';
-    }
-    els.roadmapGrid.innerHTML = html;
   }
 
   // ========== FILTERING ==========
@@ -288,21 +239,20 @@
     var result = [];
     for (var i = 0; i < skills.length; i++) {
       var s = skills[i];
-      if (state.activeCategory !== 'all' && s.category !== state.activeCategory) continue;
-      if (state.searchQuery && !matchesSearch(s, state.searchQuery)) continue;
-      result.push(s);
-    }
-    return result;
-  }
 
-  function getFilteredSkillsForCheatSheet() {
-    var skills = window.SKILLS;
-    if (!state.searchQuery) return skills.slice();
-    var result = [];
-    for (var i = 0; i < skills.length; i++) {
-      if (matchesSearch(skills[i], state.searchQuery)) {
-        result.push(skills[i]);
-      }
+      // Hide noise unless toggled
+      if (s.tier === 'noise' && !state.showNoise) continue;
+
+      // Bundle filter
+      if (state.activeBundle !== 'all' && s.bundle !== state.activeBundle) continue;
+
+      // Tier filter
+      if (state.activeTier !== 'all' && s.tier !== state.activeTier) continue;
+
+      // Search filter
+      if (state.searchQuery && !matchesSearch(s, state.searchQuery)) continue;
+
+      result.push(s);
     }
     return result;
   }
@@ -312,7 +262,8 @@
     if (skill.name.toLowerCase().indexOf(q) > -1) return true;
     if (skill.trigger.toLowerCase().indexOf(q) > -1) return true;
     if (skill.description.toLowerCase().indexOf(q) > -1) return true;
-    if (skill.category.toLowerCase().indexOf(q) > -1) return true;
+    if (skill.bundle.toLowerCase().indexOf(q) > -1) return true;
+    if (skill.tier.toLowerCase().indexOf(q) > -1) return true;
     for (var i = 0; i < skill.keywords.length; i++) {
       if (skill.keywords[i].toLowerCase().indexOf(q) > -1) return true;
     }
@@ -322,52 +273,37 @@
   // ========== EVENT HANDLERS ==========
   function handleSearch(e) {
     state.searchQuery = e.target.value.trim();
+    renderLegendarySpotlight();
     renderSkillsGrid();
-    renderCheatSheet();
-    renderApiGrid();
   }
 
-  function handleTabClick(e) {
-    var tab = e.target.closest('[data-tab]');
+  function handleBundleClick(e) {
+    var tab = e.target.closest('[data-bundle]');
     if (!tab) return;
 
-    var tabName = tab.getAttribute('data-tab');
-    state.activeTab = tabName;
-    setHash(tabName);
-    activateTab(tabName);
+    state.activeBundle = tab.getAttribute('data-bundle');
+    renderBundleTabs();
+    renderLegendarySpotlight();
+    renderSkillsGrid();
   }
 
-  function activateTab(tabName) {
-    // Update tab buttons
-    var tabs = els.tabBar.querySelectorAll('.tab-item');
-    for (var i = 0; i < tabs.length; i++) {
-      var isActive = tabs[i].getAttribute('data-tab') === tabName;
-      tabs[i].classList.toggle('tab-item--active', isActive);
-      tabs[i].setAttribute('aria-selected', isActive ? 'true' : 'false');
+  function handleTierClick(e) {
+    // Noise toggle
+    var noiseBtn = e.target.closest('[data-noise-toggle]');
+    if (noiseBtn) {
+      state.showNoise = !state.showNoise;
+      renderTierFilters();
+      renderSkillsGrid();
+      return;
     }
 
-    // Update panels
-    var panels = document.querySelectorAll('.tab-panel');
-    for (var i = 0; i < panels.length; i++) {
-      panels[i].classList.remove('tab-panel--active');
-    }
-    var activePanel = document.getElementById('panel-' + tabName);
-    if (activePanel) activePanel.classList.add('tab-panel--active');
-  }
-
-  function handleFilterClick(e) {
-    var chip = e.target.closest('[data-category]');
+    // Tier chip
+    var chip = e.target.closest('[data-tier]');
     if (!chip) return;
 
-    state.activeCategory = chip.getAttribute('data-category');
-
-    // Update chips
-    var chips = els.filterBar.querySelectorAll('.filter-chip');
-    for (var i = 0; i < chips.length; i++) {
-      chips[i].classList.remove('filter-chip--active');
-    }
-    chip.classList.add('filter-chip--active');
-
+    state.activeTier = chip.getAttribute('data-tier');
+    renderTierFilters();
+    renderLegendarySpotlight();
     renderSkillsGrid();
   }
 
@@ -380,17 +316,9 @@
       handleCopyTrigger(trigger, copyBtn);
       return;
     }
-
-    // Skill card click (recently used tracking)
-    var card = e.target.closest('[data-skill-id]');
-    if (card) {
-      var skillId = card.getAttribute('data-skill-id');
-      addToRecentlyUsed(skillId);
-    }
   }
 
   function handleCopyTrigger(text, btn) {
-    // Prevent race condition from double-clicks
     if (btn.dataset.copying === 'true') return;
     btn.dataset.copying = 'true';
     var original = btn.innerHTML;
@@ -439,9 +367,8 @@
       els.searchInput.blur();
       els.searchInput.value = '';
       state.searchQuery = '';
+      renderLegendarySpotlight();
       renderSkillsGrid();
-      renderCheatSheet();
-      renderApiGrid();
     }
   }
 
@@ -466,20 +393,6 @@
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#039;');
-  }
-
-  function findSkill(id) {
-    for (var i = 0; i < window.SKILLS.length; i++) {
-      if (window.SKILLS[i].id === id) return window.SKILLS[i];
-    }
-    return null;
-  }
-
-  function getAuthBadgeHtml(authStatus) {
-    if (authStatus === 'connected') {
-      return '<span class="badge badge--connected"><span class="badge__dot"></span>Connected</span>';
-    }
-    return '<span class="badge badge--not-connected">Not Connected</span>';
   }
 
   // ========== START ==========
