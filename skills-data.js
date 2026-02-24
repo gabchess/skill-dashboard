@@ -73,6 +73,18 @@ window.SKILLS = [
     keywords: ['merch', 'illustration', 'streetwear', 'crypto art', 'midjourney', 'character design', 'superteam'],
   },
   {
+    id: 'merch-production',
+    name: 'Merch Production',
+    trigger: '/merch-production',
+    description: 'Senior designer persona for taking AI-generated art to print-ready production files. Vectorizer.AI + Figma MCP + font replacement + human-touch post-processing. Pairs with Crypto Merch Art.',
+    bundle: 'design-creative',
+    tier: 'advanced',
+    grimoire_ready: true,
+    source: 'aria-custom',
+    status: 'active',
+    keywords: ['merch', 'vector', 'figma', 'production', 'screen print', 'mcp', 'illustrator alternative'],
+  },
+  {
     id: 'humanizer',
     name: 'Humanizer',
     trigger: '"humanize text"',
