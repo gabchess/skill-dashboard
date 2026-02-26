@@ -25,6 +25,18 @@ window.SKILLS = [
   //  LEGENDARY TIER
   // ═══════════════════════════════════════════
   {
+    id: 'simplicity-auditor',
+    name: 'Simplicity Auditor',
+    trigger: 'simplicity-auditor',
+    description: 'Radical Simplicity & Candor Auditor. Audits products, systems, architecture, strategy, UX, and messaging for overengineering, ego-driven complexity, and premature abstraction. Returns structured YES/NO/DEFER decisions. Steve Jobs simplicity standards.',
+    bundle: 'cro-product',
+    tier: 'legendary',
+    grimoire_ready: true,
+    source: 'aria-custom',
+    status: 'active',
+    keywords: ['simplicity', 'audit', 'overengineering', 'product', 'architecture', 'complexity', 'candor', 'subtraction', 'steve jobs', 'decisions'],
+  },
+  {
     id: 'vibecoding',
     name: 'Vibecoding',
     trigger: 'vibecoding',
