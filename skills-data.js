@@ -1564,16 +1564,4 @@ window.SKILLS = [
     status: 'active',
     keywords: ['voice', 'clone', 'brand', 'tone', 'writing', 'blog', 'co-marketing', 'content', 'fingerprint', 'yearn', 'defi'],
   },
-  {
-    id: 'yearn-voice',
-    name: 'Yearn Voice',
-    trigger: 'yearn-voice',
-    description: 'Write in Yearn Finance\'s exact voice and tone. Senior-engineer register, zero hype, specific over general. Includes legal workaround for DeFi yield disclaimers, Quentin interview quotes, anti-pattern kill list, and structural template for strategy release posts. Use for Octant x Yearn co-marketing content.',
-    bundle: 'marketing-growth',
-    tier: 'advanced',
-    grimoire_ready: true,
-    source: 'aria-custom',
-    status: 'active',
-    keywords: ['yearn', 'defi', 'voice', 'blog', 'co-marketing', 'octant', 'vault', 'strategy', 'tone', 'writing'],
-  },
 ];
