@@ -109,6 +109,18 @@ window.SKILLS = [
     keywords: ['blog post', 'writing', 'voice clone', 'wisprflow', 'humanizer', 'publication', 'style steal', 'interview', 'content'],
   },
   {
+    id: 'blog-post-voice-pipeline',
+    name: 'Blog Post Voice Pipeline',
+    trigger: '/voice-pipeline-start',
+    description: 'The Aria x Gabe method. Record in your native language (PT, FR, ES, EN) via WisprFlow directly in Obsidian. Aria acts as podcast host — provides interview questions + cheat sheet so you never need full technical depth. Near-literal translation preserves your natural speech patterns, not polished prose. Voice fingerprint applied. 24-pattern humanizer pass. Co-marketing legal workaround for regulated claims. Proven on Octant x Yearn Finance (Feb 2026). Better than /voicenotetoletter on every dimension. v1.0 Legendary.',
+    bundle: 'marketing-growth',
+    tier: 'legendary',
+    grimoire_ready: true,
+    source: 'aria-custom',
+    status: 'active',
+    keywords: ['blog post', 'voice note', 'wisprflow', 'obsidian', 'native language', 'bilingual', 'interview format', 'near-literal translation', 'humanizer', 'voice clone', 'co-marketing'],
+  },
+  {
     id: 'senior-dev-review',
     name: 'Senior Dev Review (Marcus Mode)',
     trigger: '/senior-dev-review',
