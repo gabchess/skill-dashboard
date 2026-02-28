@@ -126,7 +126,7 @@ window.SKILLS = [
     trigger: '"humanize text"',
     description: 'Strip AI writing patterns from text. Make prose sound natural and human-written. Run on any user-facing content before sending.',
     bundle: 'design-creative',
-    tier: 'advanced',
+    tier: 'legendary',
     grimoire_ready: true,
     source: 'openclaw',
     status: 'active',
