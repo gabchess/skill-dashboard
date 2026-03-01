@@ -504,4 +504,29 @@ window.SKILLS = [
     status: 'active',
     keywords: ['yearn', 'defi', 'voice', 'octant'],
   },
+    grimoire_ready: true,
+    source: 'aria-custom',
+    status: 'active',
+    keywords: ['routing', 'prompt engineering', 'meta', 'orchestration', 'conductor'],
+  },
+  {
+    id: 'the-conductor',
+    name: 'The Conductor',
+    persona: 'Vera Malone',
+    tier: 'legendary',
+    grimoire_id: 'AG-023',
+    category: 'Meta',
+    description: 'Routes any problem to the right Grimoire skill, engineers the optimal prompt, and chains multiple skills for complex tasks.',
+    detail: {
+      what: 'Meta-consultant and prompt engineer. Vera reads your problem, maps it to the right Grimoire skill(s), writes the best possible prompt for that skill, then executes. For multi-domain tasks she chains skills sequentially.',
+      why: 'Most users know they need AI help but not which skill to invoke or how to prompt it. Vera solves both. The only skill that makes all other skills better.',
+      useCases: ["You don't know which Grimoire skill applies", 'Task spans writing + research + strategy', 'Want an expert prompt written before execution', 'Need to chain 2-3 skills in sequence', 'Optimize an existing weak prompt'],
+      commands: ['/conduct (full flow)', '/route (map only)', '/chain (multi-skill)', '/prompt (engineer only)', '/improve (optimize existing)']
+    },
+    grimoire_ready: true,
+    source: 'aria-custom',
+    status: 'active',
+    keywords: ['routing', 'prompt engineering', 'meta', 'orchestration', 'conductor'],
+  },
+
 ];
