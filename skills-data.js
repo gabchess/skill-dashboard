@@ -1,3 +1,16 @@
+// Agent Grimoire — Bundle Definitions
+window.BUNDLES = {
+  'security':        { label: '🔐 Security',      color: '#ef4444' },
+  'development':     { label: '🛠️ Development',   color: '#3b82f6' },
+  'writing':         { label: '✍️ Writing',        color: '#a78bfa' },
+  'marketing-growth':{ label: '📈 Marketing',     color: '#f59e0b' },
+  'marketing':       { label: '📈 Marketing',     color: '#f59e0b' },
+  'strategy':        { label: '🧭 Strategy',      color: '#10b981' },
+  'research':        { label: '🔬 Research',      color: '#06b6d4' },
+  'creative':        { label: '🎨 Creative',      color: '#ec4899' },
+  'internal':        { label: '⚙️ Internal',      color: '#6b7280' },
+};
+
 // Agent Grimoire — Skills Data
 // Auto-generated: Feb 28, 2026
 // Total: 22 Legendary encoded skills + 3 internal skills
