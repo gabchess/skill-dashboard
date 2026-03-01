@@ -461,3 +461,84 @@ window.SKILLS = [
     keywords: ['voice', 'clone', 'brand', 'tone', 'writing', 'blog', 'co-marketing', 'content', 'fingerprint', 'yearn', 'defi'],
   },
 ];
+
+// ═══════════════════════════════════════════
+//  NEW LEGENDARY — Feb 28, 2026 (Mega-Merge Drop)
+// ═══════════════════════════════════════════
+window.SKILLS.push(
+  {
+    id: 'ghost-hacker',
+    name: 'Ghost Hacker',
+    trigger: 'ghost-hacker',
+    description: 'The complete Web3 white hat security researcher. Merges bounty hunting, EVM/Solana auditing, red team mindset, and reverse engineering into one unified workflow. Replaces bounty-hunting, dev-solidity, dev-solana, and security-review.',
+    bundle: 'security-web3',
+    tier: 'legendary',
+    grimoire_ready: true,
+    source: 'aria-custom',
+    status: 'active',
+    keywords: ['bounty', 'security', 'audit', 'smart contract', 'exploit', 'red team', 'evm', 'solana', 'reverse engineering', 'immunefi', 'cantina', 'code4rena', 'pentest', 'vulnerability'],
+    detail: {
+      what: 'Ghost Hacker fuses five skills into one: bounty hunting methodology, EVM smart contract auditing, Solana program security, offensive red team thinking (from P0tS3c), and reverse engineering for obfuscated contracts. It thinks like an attacker first — follows the money, maps every trust boundary, and never submits without a Foundry PoC.',
+      why: 'Security researchers waste time context-switching between skills and methodologies. Ghost Hacker gives you one pre-flight, one model routing table, one recon protocol, and one report format — so you can go from codebase to submission faster and with higher hit rate.',
+      useCases: [
+        'Running a full Immunefi/Cantina/Code4rena bug bounty from recon to submission',
+        'Smart contract security review for EVM protocols (Solidity, Foundry)',
+        'Solana program audits (Anchor, Pinocchio, missing signer/owner checks)',
+        'Reverse engineering unverified bytecode or obfuscated MEV bots',
+        'Threat modeling a new DeFi protocol before deployment',
+        'Writing a clean, structured vulnerability report that gets paid',
+      ],
+      commands: ['/ghost — full pre-flight + recon', '/recon [target] — spawn ghost-recon sub-agent', '/exploit [finding] — Opus mode, write PoC', '/report — structured vuln report', '/evm — EVM vuln pattern library', '/solana — Solana vuln pattern library', '/re — reverse engineering mode'],
+    },
+  },
+  {
+    id: 'content-forge',
+    name: 'Content Forge',
+    trigger: 'content-forge',
+    description: 'The complete content pipeline from raw idea to published piece. Merges blog-post-writer-v2, humanizer, voice-clone, copywriting, content-strategy, and platform adaptation. Voice → fingerprint → write → humanize → publish across all formats.',
+    bundle: 'marketing-growth',
+    tier: 'legendary',
+    grimoire_ready: true,
+    source: 'aria-custom',
+    status: 'active',
+    keywords: ['blog post', 'content', 'writing', 'voice clone', 'humanizer', 'copywriting', 'social', 'newsletter', 'thread', 'platform', 'wisprflow', 'voice fingerprint', 'on-brand'],
+    detail: {
+      what: 'Content Forge runs the full content pipeline in one skill: capture any input (voice note, brain dump, interview, rough draft), build or load a voice fingerprint for the author, write in their natural voice, run the humanizer kill list, score to 100 points, and adapt the final piece for blog, thread, LinkedIn, newsletter, or Discord — all from one slash command.',
+      why: 'Great content dies in the gap between "I have something to say" and "this sounds like me, not an AI." Content Forge closes that gap with the humanizer baked in at every stage, a proven voice fingerprinting system, and a 100-point quality gate before anything goes out.',
+      useCases: [
+        'Writing a blog post from a WisprFlow voice note or brain dump',
+        'Building a voice fingerprint for any founder, brand, or protocol',
+        'Turning one long-form piece into a full content stack (thread + newsletter + LinkedIn)',
+        'Humanizing an AI draft that sounds like ChatGPT wrote it',
+        'Writing co-marketing content that sounds exactly like the partner brand',
+        'Scoring and improving a draft to 85+ before submitting to an editor',
+      ],
+      commands: ['/forge [topic] — full pipeline from scratch', '/forge-voice [file] — start from voice/transcript', '/forge-review [file] — review and score existing draft', '/forge-adapt [post] — adapt to all platforms', '/voice-capture [samples] — build voice fingerprint', '/forge-score — run 100-point quality check'],
+    },
+  },
+  {
+    id: 'the-oracle',
+    name: 'The Oracle',
+    trigger: 'the-oracle',
+    description: 'The ultimate research, learning, and advisory system. Merges deep-research, advisory-council, web-research, Universal Primer (Feynman method), AutoExpert expert panels, and Professor Synapse orchestration into one unified intelligence partner.',
+    bundle: 'ai-agents',
+    tier: 'legendary',
+    grimoire_ready: true,
+    source: 'aria-custom',
+    status: 'active',
+    keywords: ['research', 'advisory', 'expert panel', 'feynman', 'learning', 'debate', 'synthesize', 'deep research', 'multi-perspective', 'intelligence', 'oracle', 'decision making'],
+    detail: {
+      what: 'The Oracle runs in four modes: Research (multi-step intelligence gathering with calibrated confidence), Learn (Feynman-style recursive teaching that fills prerequisite gaps before advancing), Advise (summons the right expert panel for any question with structured debate), and Synthesize (reconciles conflicting sources into a defensible position). It routes to the right mode automatically or you can invoke any mode directly.',
+      why: 'Research, learning, and decision-making are three different cognitive tasks that need three different workflows. The Oracle is the first skill that handles all three seamlessly — so you can go from "I need to understand X" to "here is the expert panel consensus with calibrated confidence" in one session without switching skills.',
+      useCases: [
+        'Deep research on any complex topic with source quality assessment and confidence levels',
+        'Learning a new technical subject from first principles using Feynman analogies',
+        'Convening a multi-expert panel debate before making a high-stakes decision',
+        'Synthesizing 5 conflicting articles or analyst reports into one defensible conclusion',
+        'Stress-testing a business or technical plan through a Town Square debate',
+        'Recursive prerequisite filling when learning DeFi, security, ML, or any new domain',
+      ],
+      commands: ['/oracle [anything] — auto-selects mode', '/research [topic] — deep multi-source research', '/feynman [subject] — recursive Feynman learning', '/panel [question] — multi-expert advisory panel', '/debate [decision] — town square debate format', '/synthesize [topic] — reconcile conflicting sources'],
+    },
+  }
+);

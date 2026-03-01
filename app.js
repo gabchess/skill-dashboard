@@ -398,3 +398,97 @@
   // ========== START ==========
   init();
 })();
+
+// ========== SKILL MODAL ==========
+(function() {
+  var modal = null;
+
+  function createModal() {
+    var el = document.createElement('div');
+    el.id = 'skillModal';
+    el.className = 'skill-modal-overlay';
+    el.setAttribute('role', 'dialog');
+    el.setAttribute('aria-modal', 'true');
+    el.innerHTML = '<div class="skill-modal" id="skillModalBox"><button class="skill-modal__close" id="skillModalClose" aria-label="Close">&times;</button><div id="skillModalContent"></div></div>';
+    document.body.appendChild(el);
+    modal = el;
+
+    el.addEventListener('click', function(e) {
+      if (e.target === el) closeModal();
+    });
+    document.getElementById('skillModalClose').addEventListener('click', closeModal);
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+  }
+
+  function openModal(skillId) {
+    var skill = null;
+    for (var i = 0; i < window.SKILLS.length; i++) {
+      if (window.SKILLS[i].id === skillId) { skill = window.SKILLS[i]; break; }
+    }
+    if (!skill) return;
+
+    if (!modal) createModal();
+
+    var tierInfo = window.TIERS[skill.tier] || { label: skill.tier, color: '#888' };
+    var bundleInfo = window.BUNDLES[skill.bundle] || { label: skill.bundle };
+    var d = skill.detail || null;
+
+    var html = '<div class="skill-modal__header">' +
+      '<span class="skill-modal__tier" style="color:' + tierInfo.color + '">' + esc(tierInfo.label.toUpperCase()) + '</span>' +
+      '<span class="skill-modal__bundle">' + esc(bundleInfo.label) + '</span>' +
+      '</div>' +
+      '<h2 class="skill-modal__name">' + esc(skill.name) + '</h2>' +
+      '<div class="skill-modal__trigger-row">' +
+        '<code class="skill-modal__trigger">' + esc(skill.trigger) + '</code>' +
+        '<button class="copy-btn skill-modal__copy" data-trigger="' + esc(skill.trigger) + '"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> copy</button>' +
+      '</div>' +
+      '<p class="skill-modal__desc">' + esc(skill.description) + '</p>';
+
+    if (d) {
+      html += '<hr class="skill-modal__divider">';
+      if (d.what) html += '<div class="skill-modal__section"><h4 class="skill-modal__section-title">What it does</h4><p>' + esc(d.what) + '</p></div>';
+      if (d.why) html += '<div class="skill-modal__section"><h4 class="skill-modal__section-title">Why it matters</h4><p>' + esc(d.why) + '</p></div>';
+      if (d.useCases && d.useCases.length) {
+        html += '<div class="skill-modal__section"><h4 class="skill-modal__section-title">Use cases</h4><ul class="skill-modal__list">';
+        for (var j = 0; j < d.useCases.length; j++) html += '<li>' + esc(d.useCases[j]) + '</li>';
+        html += '</ul></div>';
+      }
+      if (d.commands && d.commands.length) {
+        html += '<div class="skill-modal__section"><h4 class="skill-modal__section-title">Commands</h4><div class="skill-modal__commands">';
+        for (var k = 0; k < d.commands.length; k++) html += '<code class="skill-modal__cmd">' + esc(d.commands[k]) + '</code>';
+        html += '</div></div>';
+      }
+    }
+
+    document.getElementById('skillModalContent').innerHTML = html;
+    modal.classList.add('skill-modal-overlay--open');
+    document.body.classList.add('modal-open');
+  }
+
+  function closeModal() {
+    if (!modal) return;
+    modal.classList.remove('skill-modal-overlay--open');
+    document.body.classList.remove('modal-open');
+  }
+
+  function esc(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+  }
+
+  // Hook into existing global click handler
+  var _originalGlobalClick = null;
+  document.addEventListener('click', function(e) {
+    var card = e.target.closest('[data-skill-id]');
+    var copyBtn = e.target.closest('.copy-btn');
+    if (card && !copyBtn) {
+      var skillId = card.getAttribute('data-skill-id');
+      if (skillId) openModal(skillId);
+    }
+  }, true); // capture phase so we catch before other handlers
+
+  window.openSkillModal = openModal;
+  window.closeSkillModal = closeModal;
+})();
