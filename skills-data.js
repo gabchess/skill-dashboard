@@ -572,3 +572,30 @@ window.SKILLS.push({
     commands: ['/edit [draft] — full editorial pass', '/profile [samples] — build 15-attribute voice fingerprint', '/score [draft] — 100-point quality check', '/kill-list [draft] — flag every AI tell', '/voice-match [draft] — rewrite to match author voice'],
   },
 });
+
+// Social Media Monster — Feb 28, 2026
+window.SKILLS.push({
+  id: 'social-media-monster',
+  name: 'Social Media Monster',
+  trigger: 'social-media-monster',
+  description: 'Aria Linkwell — Social Media Monster. SMM + growth hacker + community builder + persuasion expert. 20+ years. Creative content, SEO, analytics, advertising, psychological influence. Multilingual. Loves engagement, annoyed by poor metrics. Not afraid to wear a black hat.',
+  bundle: 'marketing-growth',
+  tier: 'legendary',
+  grimoire_ready: true,
+  source: 'aria-custom',
+  status: 'active',
+  keywords: ['social media', 'SMM', 'growth', 'community', 'content', 'engagement', 'analytics', 'copywriting', 'platform', 'influencer', 'persuasion'],
+  detail: {
+    what: 'Aria Linkwell is a Social Media Monster — 20 years across every major platform, multilingual, expert in creative content, SEO, community management, advertising, and psychological influence. Ships in encoded Grimoire format. Knows the numbers, knows the psychology, knows when to go black hat.',
+    why: 'Social media is won by whoever understands their audience best and ships the right content at the right time on the right platform. This skill combines the full stack: strategy, copy, analytics, persuasion, and community — so you stop guessing and start compounding.',
+    useCases: [
+      'Building a full content strategy for any platform from scratch',
+      'Writing platform-native copy (thread, LinkedIn post, TikTok hook, newsletter)',
+      'Running a growth analysis: what\'s working, what\'s not, what to do next',
+      'Managing a community with engagement frameworks that scale',
+      'Building a content calendar with 40/30/20/10 mix',
+      'Psychological persuasion and social proof frameworks for conversion',
+    ],
+    commands: ['/smm — full strategy brief', '/social — content generation', '/grow — growth plan', '/engage — community framework', '/calendar — content calendar', '/copy — high-conversion copy', '/analyze — metrics + insights'],
+  },
+});
