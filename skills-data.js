@@ -15,6 +15,13 @@ window.BUNDLES = {
 // Auto-generated: Feb 28, 2026
 // Total: 22 Legendary encoded skills + 3 internal skills
 
+window.TIERS = {
+  legendary: { label: 'Legendary', color: '#f59e0b' },
+  advanced:  { label: 'Advanced',  color: '#a78bfa' },
+  standard:  { label: 'Standard',  color: '#6b7280' },
+  noise:     { label: 'Noise',     color: '#374151' },
+};
+
 window.SKILLS = [
 
   // ═══════════════════════════════════════
