@@ -73,8 +73,8 @@ window.SKILLS = [
     keywords: ['merch', 'vector', 'figma', 'production', 'screen print', 'print-ready', 'marco', 'human-touch', 'font replacement'],
   },
   {
-    id: 'blog-post-writer',
-    name: 'Blog Post Writer',
+    id: 'blog-post-writer-old',
+    name: 'Blog Post Writer [ARCHIVED]',
     trigger: '/blog-post-writer',
     description: 'Universal blog post pipeline for writers, PMs, and founders. Six stages: Aria interviews you about the topic → researches social pulse + articles → writes a brain dump draft in your natural voice → captures your voice reaction (WisprFlow/Whisper/text) → clones your brand voice from past articles → humanizer pass. Works for any company, any topic, any writer. First-time-user ready. v2.0 Legendary.',
     bundle: 'marketing-growth',
@@ -86,7 +86,7 @@ window.SKILLS = [
   },
   {
     id: 'blog-post-voice-pipeline',
-    name: 'Blog Post Voice Pipeline',
+    name: 'Blog Post Voice Pipeline [ARCHIVED]',
     trigger: '/voice-pipeline-start',
     description: 'The Aria x Gabe method. Record in your native language (PT, FR, ES, EN) via WisprFlow directly in Obsidian. Aria acts as podcast host — provides interview questions + cheat sheet so you never need full technical depth. Near-literal translation preserves your natural speech patterns, not polished prose. Voice fingerprint applied. 24-pattern humanizer pass. Co-marketing legal workaround for regulated claims. Proven on Octant x Yearn Finance (Feb 2026). Better than /voicenotetoletter on every dimension. v1.0 Legendary.',
     bundle: 'marketing-growth',
@@ -542,3 +542,33 @@ window.SKILLS.push(
     },
   }
 );
+
+// ═══════════════════════════════════════════
+//  BLOG POST WRITER REBUILD — Feb 28, 2026
+//  Real skill: Morgan Chen, Ghost Editor persona
+// ═══════════════════════════════════════════
+window.SKILLS.push({
+  id: 'blog-post-writer-morgan',
+  name: 'Blog Post Writer — Morgan Chen',
+  trigger: 'blog-post-writer',
+  description: 'Morgan Chen — veteran editor and ghostwriter, 25 years. Ghost-written for 200+ founders. Makes any draft sound like the author wrote it. Not polished. Not generic. Theirs. Uses 15-attribute voice fingerprinting + the humanizer kill list. 100-point quality gate before anything ships.',
+  bundle: 'marketing-growth',
+  tier: 'legendary',
+  grimoire_ready: true,
+  source: 'aria-custom',
+  status: 'active',
+  keywords: ['blog post', 'editing', 'ghostwriting', 'humanizer', 'voice match', 'kill list', 'polish', 'editor', 'draft', 'writing', 'morgan', 'score'],
+  detail: {
+    what: 'Morgan Chen is a persona — a 25-year veteran editor and ghostwriter who takes any draft (AI-assisted, brain dump, rough notes) and makes it sound like the author wrote every word. Morgan has the humanizer kill list internalized as editorial instinct, uses the 15-attribute authorship system to fingerprint voices, and runs a 100-point quality gate before anything is released. This is NOT a pipeline. It\'s an expert editorial persona you hand a draft to.',
+    why: 'AI-assisted drafts have tells. Editors notice them. Readers feel them even if they can\'t name them. Morgan exists to close that gap — to make your post sound like you, not like a language model trying to sound like you. The standard is simple: the author reads it and thinks they wrote it.',
+    useCases: [
+      'Polishing a rough draft or brain dump into a publish-ready blog post',
+      'Humanizing AI-generated text that sounds generic or stilted',
+      'Voice-matching a draft to a specific author\'s natural register',
+      'Running the kill list on any piece before it goes to an editor',
+      'Scoring a draft 0-100 with specific feedback before submission',
+      'Building a reusable 15-attribute voice fingerprint for any author',
+    ],
+    commands: ['/edit [draft] — full editorial pass', '/profile [samples] — build 15-attribute voice fingerprint', '/score [draft] — 100-point quality check', '/kill-list [draft] — flag every AI tell', '/voice-match [draft] — rewrite to match author voice'],
+  },
+});
